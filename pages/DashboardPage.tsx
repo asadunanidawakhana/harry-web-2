@@ -279,7 +279,7 @@ const WatchVideos: React.FC = () => {
 
 // Sub-component for Buying Coins
 const BuyCoins: React.FC = () => {
-    const [pkg, setPkg] = useState(100);
+    const [pkg, setPkg] = useState(5000);
     const [tid, setTid] = useState('');
     const [screenshot, setScreenshot] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
@@ -365,9 +365,12 @@ const BuyCoins: React.FC = () => {
                     <div>
                         <label className="text-sm font-bold text-text-secondary block mb-2">Select Package</label>
                         <select value={pkg} onChange={(e) => setPkg(Number(e.target.value))} className="w-full p-3 bg-background rounded-md border border-[var(--border)] focus:border-[var(--accent-glow)] focus:ring-2 focus:ring-[var(--accent-glow)]/50 transition">
-                            <option value={100}>100 Coins</option>
-                            <option value={500}>500 Coins</option>
-                            <option value={1000}>1000 Coins</option>
+                            <option value={5000}>5000 Coins</option>
+                            <option value={6000}>6000 Coins</option>
+                            <option value={7000}>7000 Coins</option>
+                            <option value={8000}>8000 Coins</option>
+                            <option value={9000}>9000 Coins</option>
+                            <option value={10000}>10000 Coins</option>
                         </select>
                     </div>
                     <div>
