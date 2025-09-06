@@ -1,0 +1,5 @@
+{
+  "name": "Supabase Video Earning App",
+  "description": "A complete online video earning web application with a Supabase backend, user dashboard, and an admin panel for management.",
+  "requestFramePermissions": []
+}
