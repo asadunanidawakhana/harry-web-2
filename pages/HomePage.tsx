@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { PlayCircle, DollarSign, LogIn, HelpCircle } from 'lucide-react';
+import { PlayCircle, DollarSign, LogIn, HelpCircle, ShieldCheck } from 'lucide-react';
 
 const FeatureCard: React.FC<{ icon: React.ReactNode; title: string; description: string, delay: string }> = ({ icon, title, description, delay }) => (
     <div className="bg-surface/50 backdrop-blur-sm p-8 rounded-xl border border-[var(--border)] text-center transform hover:-translate-y-2 transition-all duration-300 animate-fadeInUp" style={{animationDelay: delay}}>
@@ -26,10 +27,10 @@ const HomePage: React.FC = () => {
                 <div className="absolute top-1/2 left-1/2 w-[50rem] h-[50rem] -translate-x-1/2 -translate-y-1/2 bg-gradient-to-tr from-blue-900/50 via-purple-900/50 to-transparent rounded-full blur-3xl animate-pulse"></div>
                 <div className="relative z-10 animate-fadeInUp">
                     <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-400">
-                        Watch Videos, Earn Real Money
+                        Watch Videos, Earn Daily
                     </h1>
                     <p className="max-w-3xl mx-auto text-lg text-text-secondary mb-10">
-                        Join VidEarn and turn your spare time into earnings. Buy coin packages, watch engaging videos, and withdraw your rewards.
+                        Join VidEarn, pick a plan, and turn your spare time into daily earnings. Watch videos to claim your reward and withdraw once a week.
                     </p>
                     <div className="flex justify-center gap-4">
                         <Link to="/auth" className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 text-white font-bold py-4 px-8 rounded-lg transition duration-300 text-lg shadow-[0_0_20px_rgba(59,130,246,0.5)]">
@@ -45,21 +46,21 @@ const HomePage: React.FC = () => {
                     <h2 className="text-4xl font-bold text-center mb-16 animate-fadeInUp">How It Works</h2>
                     <div className="grid md:grid-cols-3 gap-8">
                         <FeatureCard 
-                            icon={<DollarSign size={48} />}
-                            title="1. Buy Coins" 
-                            description="Choose a coin package that suits you. Make a payment and submit the transaction details to get your coins." 
+                            icon={<ShieldCheck size={48} />}
+                            title="1. Choose a Plan" 
+                            description="Select a subscription plan that fits your goals. Make a payment and submit the transaction details for activation." 
                             delay="0s"
                         />
                         <FeatureCard 
                             icon={<PlayCircle size={48} />}
-                            title="2. Watch Videos" 
-                            description="Use your coins to unlock and watch exclusive videos. Each video you watch adds real money to your balance." 
+                            title="2. Watch Videos Daily" 
+                            description="Watch the required number of videos each day to become eligible for your daily earnings. " 
                             delay="0.2s"
                         />
                         <FeatureCard 
-                            icon={<LogIn size={48} />}
-                            title="3. Get Paid" 
-                            description="Once you reach the withdrawal threshold, you can request your earnings. We process payments quickly and securely." 
+                            icon={<DollarSign size={48} />}
+                            title="3. Claim & Withdraw" 
+                            description="Claim your daily reward after watching videos. You can request a withdrawal of your earnings once every week." 
                             delay="0.4s"
                         />
                     </div>
@@ -77,16 +78,16 @@ const HomePage: React.FC = () => {
                     </div>
                     <div className="space-y-6 animate-fadeInUp" style={{animationDelay: '0.2s'}}>
                         <FAQItem 
-                            question="How do I buy coins?" 
-                            answer="Go to the 'Buy Coins' section in your dashboard, select a package, and follow the payment instructions. Upload your transaction ID and a screenshot for verification."
-                        />
-                        <FAQItem 
-                            question="How long does it take for my deposit to be approved?" 
-                            answer="Our admin team typically reviews and approves transactions within a few hours. You will be notified once your coins are added to your account."
+                            question="How do I buy a plan?" 
+                            answer="Go to the 'Plans' section in your dashboard, select a plan, and follow the payment instructions. Upload your transaction ID and a screenshot for verification."
                         />
                          <FAQItem 
-                            question="Can I watch the same video multiple times?" 
-                            answer="No, each video can only be watched once per user to ensure fair earning opportunities for everyone on the platform."
+                            question="How are earnings calculated?" 
+                            answer="Your earnings are determined by your active plan. Each plan has a fixed daily earning amount that you can claim after watching a specific number of videos for that day."
+                        />
+                         <FAQItem 
+                            question="How often can I withdraw?" 
+                            answer="To ensure smooth processing for all users, withdrawals are limited to once per week."
                         />
                          <FAQItem 
                             question="Is my investment safe?" 

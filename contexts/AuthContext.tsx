@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { supabase } from '../services/supabase';
 import type { Session, User, AuthError } from '@supabase/supabase-js';
@@ -9,7 +10,7 @@ interface AuthContextType {
   isAdmin: boolean;
   loading: boolean;
   signIn: (args: { email: string; password: string; }) => Promise<{ error: AuthError | null; }>;
-  signUp: (args: { email: string; password: string; username: string; }) => Promise<{ error: AuthError | null; }>;
+  signUp: (args: { email: string; password: string; username: string; referralCode?: string }) => Promise<{ error: AuthError | null; }>;
   signOut: () => Promise<void>;
   refetchProfile: () => Promise<void>;
 }
@@ -22,68 +23,125 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        try {
-            await fetchProfile(session.user);
-        } catch (e) {
-            console.error("Initial profile fetch failed:", e);
-        }
-      }
-      setLoading(false);
-    };
-
-    checkSession();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        try {
-            await fetchProfile(session.user);
-        } catch (e) {
-            console.error("Profile fetch on auth state change failed:", e);
-        }
-      } else {
-        setProfile(null);
-        setIsAdmin(false);
-      }
-    });
-
-    return () => {
-      subscription?.unsubscribe();
-    };
-  }, []);
-
   const fetchProfile = async (user: User) => {
+    // Join with plans table to get plan details
     const { data, error } = await supabase
       .from('users')
-      .select('*')
+      .select('*, plans(*)')
       .eq('id', user.id)
       .single();
 
     if (error) {
       console.error('Error fetching profile:', error);
-      // This is a critical change. By throwing an error, we allow calling functions
-      // (like handleClaimReward) to catch it and handle the UI state correctly,
-      // preventing silent failures and inconsistent UI.
-      throw new Error(`Could not fetch user profile: ${error.message}`);
+      // Don't throw error here, as it might crash the app on intermittent network issues
+      // Just log it and maybe set profile to null
+      setProfile(null);
+      setIsAdmin(false);
+      return;
     }
     
     if (data) {
-      setProfile(data as UserProfile);
+       // Calculate if plan is active and not expired
+      let isPlanActive = false;
+      if (data.plan_id && data.plan_activated_at && data.plans) {
+          const activationDate = new Date(data.plan_activated_at);
+          const expiryDate = new Date(activationDate);
+          expiryDate.setDate(activationDate.getDate() + data.plans.validity_days);
+          
+          if (new Date() < expiryDate) {
+              isPlanActive = true;
+          }
+      }
+      
+      const profileWithStatus: UserProfile = { 
+          ...data, 
+          isPlanCurrentlyActive: isPlanActive 
+      };
+
+      setProfile(profileWithStatus as UserProfile);
       setIsAdmin(data.role === 'admin');
     } else {
-      // This case should ideally not happen if there's no error, but as a safeguard:
-      throw new Error("User profile data not found.");
+        // Handle case where user exists in auth but not in public.users table
+        setProfile(null);
+        setIsAdmin(false);
     }
   };
 
+
+  useEffect(() => {
+    // This timeout is a fallback, in case onAuthStateChange never fires.
+    const timer = setTimeout(() => {
+        if (loading) {
+            console.warn("Auth state check timed out. Forcing UI to load.");
+            setLoading(false);
+        }
+    }, 5000); // 5-second timeout is a safe fallback
+
+    const { data: { subscription: authSubscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      clearTimeout(timer); // Clear the fallback timer once the listener responds.
+
+      try {
+        const currentUser = session?.user ?? null;
+        setUser(currentUser); // Update user immediately
+
+        if (currentUser) {
+            // Fetch profile in the background. The rest of the app will update when it's ready.
+            fetchProfile(currentUser).catch(err => {
+                console.error("Failed to fetch profile in background", err);
+                // On failure, ensure profile state is cleared to avoid inconsistencies
+                setProfile(null);
+                setIsAdmin(false);
+            });
+        } else {
+            setProfile(null);
+            setIsAdmin(false);
+        }
+      } catch (e) {
+         console.error("Error during auth state change:", e);
+         // Reset state on error to be safe
+         setUser(null);
+         setProfile(null);
+         setIsAdmin(false);
+      } finally {
+        // This is the key fix: The main app loader is hidden as soon as the auth state is known.
+        // The profile information will load in asynchronously.
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      clearTimeout(timer);
+      authSubscription?.unsubscribe();
+    };
+  }, []);
+
+
+  useEffect(() => {
+    // Subscribe to profile changes in realtime
+    if (!user) return;
+
+    const profileChannel = supabase
+        .channel(`public:users:id=eq.${user.id}`)
+        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'users', filter: `id=eq.${user.id}` }, 
+        (payload) => {
+            console.log('Profile change detected, refetching profile.', payload);
+            refetchProfile();
+        })
+        .subscribe();
+
+    return () => {
+        supabase.removeChannel(profileChannel);
+    };
+  }, [user]);
+
+
   const refetchProfile = async () => {
     if (user) {
-        await fetchProfile(user);
+        try {
+            await fetchProfile(user);
+        } catch(e) {
+             console.error("Refetch profile failed:", e);
+        }
     }
   };
 
@@ -92,13 +150,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return { error };
   };
 
-  const signUp = async ({ email, password, username }: { email: string; password: string; username: string; }) => {
+  const signUp = async ({ email, password, username, referralCode }: { email: string; password: string; username: string; referralCode?: string; }) => {
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           username: username,
+          referral_code_used: referralCode, // Pass referral code for backend trigger to process
         },
       },
     });

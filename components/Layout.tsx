@@ -1,7 +1,8 @@
+
 import React, { ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Video, User, LogOut, Shield, Home } from 'lucide-react';
+import { Video, User, LogOut, Shield, Home, Crown } from 'lucide-react';
 
 const Navbar: React.FC = () => {
     const { user, profile, isAdmin, signOut } = useAuth();
@@ -26,7 +27,14 @@ const Navbar: React.FC = () => {
                         {user && profile ? (
                             <>
                                 <div className="hidden sm:flex items-center gap-4 text-sm text-text-secondary border border-[var(--border)] bg-background/50 rounded-full px-4 py-2">
-                                    <span>Coins: <span className="font-bold text-yellow-400">{profile.coins}</span></span>
+                                    {profile.plans ? (
+                                        <span className="flex items-center gap-2">
+                                            <Crown size={16} className="text-yellow-400" />
+                                            <span className="font-bold text-yellow-400">{profile.plans.name}</span>
+                                        </span>
+                                    ) : (
+                                        <span>No Active Plan</span>
+                                    )}
                                     <span className="text-[var(--border)]">|</span>
                                     <span>Balance: <span className="font-bold text-green-400">PKR {profile.balance.toFixed(2)}</span></span>
                                 </div>
@@ -54,13 +62,27 @@ const Navbar: React.FC = () => {
     );
 };
 
+const Footer: React.FC = () => (
+    <footer className="bg-surface/50 border-t border-[var(--border)] mt-16">
+        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-text-secondary text-sm">
+            <p>&copy; {new Date().getFullYear()} VidEarn. All Rights Reserved.</p>
+            <div className="mt-2">
+                <Link to="/changelog" className="hover:text-[var(--accent-glow)] transition-colors">
+                    Changelog
+                </Link>
+            </div>
+        </div>
+    </footer>
+);
+
 const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
     return (
-        <div className="min-h-screen bg-background text-text-primary">
+        <div className="min-h-screen bg-background text-text-primary flex flex-col">
             <Navbar />
-            <main>
+            <main className="flex-grow">
                 {children}
             </main>
+            <Footer />
         </div>
     );
 };

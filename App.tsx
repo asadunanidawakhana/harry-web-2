@@ -8,6 +8,7 @@ import DashboardPage from './pages/DashboardPage';
 import AdminPage from './pages/AdminPage';
 import Layout from './components/Layout';
 import WarningPopup from './components/WarningPopup';
+import ChangelogPage from './pages/ChangelogPage';
 
 const AppRoutes = () => {
   const { user, isAdmin, loading } = useAuth();
@@ -25,6 +26,7 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/auth" element={!user ? <AuthPage /> : <Navigate to="/dashboard" />} />
+        <Route path="/changelog" element={<ChangelogPage />} />
         <Route 
           path="/dashboard" 
           element={user ? <DashboardPage /> : <Navigate to="/auth" />} 

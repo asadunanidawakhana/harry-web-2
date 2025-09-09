@@ -7,6 +7,7 @@ const AuthPage: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
+    const [referralCode, setReferralCode] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [message, setMessage] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -35,7 +36,7 @@ const AuthPage: React.FC = () => {
                     navigate('/dashboard');
                 }
             } else {
-                const { error: signUpError } = await signUp({ email, password, username });
+                const { error: signUpError } = await signUp({ email, password, username, referralCode });
                 if (signUpError) {
                     if (signUpError.message.includes('User already registered')) {
                         setError('This email address is already in use. Please try logging in.');
@@ -106,7 +107,7 @@ const AuthPage: React.FC = () => {
                             placeholder="you@example.com"
                         />
                     </div>
-                    <div>
+                     <div>
                         <label className="text-sm font-bold text-text-secondary block mb-2">Password</label>
                         <input
                             type="password"
@@ -117,12 +118,29 @@ const AuthPage: React.FC = () => {
                             placeholder="••••••••"
                         />
                     </div>
+                    {!isLogin && (
+                        <div>
+                            <label className="text-sm font-bold text-text-secondary block mb-2">Referral Code (Optional)</label>
+                            <input
+                                type="text"
+                                value={referralCode}
+                                onChange={(e) => setReferralCode(e.target.value)}
+                                className="w-full p-3 bg-background rounded-md border border-[var(--border)] focus:border-[var(--accent-glow)] focus:ring-2 focus:ring-[var(--accent-glow)]/50 transition"
+                                placeholder="Enter referral code"
+                            />
+                        </div>
+                    )}
+
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 text-white font-bold py-3 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-[0_0_15px_rgba(59,130,246,0.5)] disabled:opacity-50 disabled:cursor-wait"
                     >
-                        {loading ? 'Processing...' : (isLogin ? 'Login' : 'Sign Up')}
+                        {loading ? (
+                            <div className="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                        ) : (
+                            isLogin ? 'Login' : 'Sign Up'
+                        )}
                     </button>
                 </form>
             </div>
