@@ -1,4 +1,6 @@
-import type { User } from '@supabase/supabase-js';
+// FIX: In some environments, Supabase types are not correctly re-exported.
+// Importing directly from `@supabase/auth-js` resolves this.
+import type { User } from '@supabase/auth-js';
 
 export interface Plan {
   id: string;
@@ -19,7 +21,7 @@ export interface UserProfile {
   role: 'user' | 'admin';
   plan_id: string | null;
   plan_activated_at: string | null;
-  last_withdrawal_at: string | null;
+  last_withdraw: string | null;
   plans?: Plan; // For joined data
   isPlanCurrentlyActive?: boolean; // Centralized flag for plan status
   referral_code: string | null;

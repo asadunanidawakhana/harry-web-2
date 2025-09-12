@@ -14,7 +14,8 @@
     "react-dom": "^19.1.1",
     "@supabase/supabase-js": "^2.57.2",
     "lucide-react": "^0.542.0",
-    "@supabase/gotrue-js": "^2.71.1"
+    "@supabase/gotrue-js": "^2.71.1",
+    "@supabase/auth-js": "^2.71.1"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

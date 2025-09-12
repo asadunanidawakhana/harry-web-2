@@ -87,10 +87,38 @@ const ManageTransactions = () => {
         setError(null);
         try {
             if (newStatus === 'approved') {
+                // Fetch the user who made the transaction to check their referral status.
+                const { data: purchasingUser, error: fetchUserError } = await supabase
+                    .from('users')
+                    .select('id, referred_by, plan_id')
+                    .eq('id', tx.user_id)
+                    .single();
+
+                if (fetchUserError || !purchasingUser) throw new Error('Could not find the user for this transaction.');
+                
+                const isFirstPlan = !purchasingUser.plan_id;
+                const referrerId = purchasingUser.referred_by;
+
+                // If it's their first plan purchase and they have a referrer, award the bonus.
+                if (isFirstPlan && referrerId) {
+                    const { error: rpcError } = await supabase.rpc('award_referral_bonus', {
+                        p_referrer_id: referrerId,
+                        bonus_amount: 100
+                    });
+
+                    if (rpcError) {
+                        // Log the error but don't block the main transaction approval
+                        console.error("Failed to award referral bonus:", rpcError);
+                        setError(`User plan approved, but failed to award referral bonus: ${rpcError.message}`);
+                    }
+                }
+
+                // Activate the user's new plan
                 const { error: userUpdateError } = await supabase.from('users').update({ 
                     plan_id: tx.plan_id,
                     plan_activated_at: new Date().toISOString()
                 }).eq('id', tx.user_id);
+
                 if (userUpdateError) throw userUpdateError;
             }
 
@@ -107,6 +135,7 @@ const ManageTransactions = () => {
             setError(`Operation failed: ${userMessage}`);
         }
     };
+
 
     return (
         <div className="animate-fadeInUp">
@@ -171,7 +200,7 @@ const ManageWithdrawals = () => {
             // Deduct balance and set last withdrawal date
             const newBalance = userBalance - wd.amount;
             const { error: userUpdateError } = await supabase.from('users')
-                .update({ balance: newBalance, last_withdrawal_at: new Date().toISOString() })
+                .update({ balance: newBalance, last_withdraw: new Date().toISOString() })
                 .eq('id', wd.user_id);
             if (userUpdateError) throw userUpdateError;
 

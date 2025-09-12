@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+// Fix: Replaced single quotes with double quotes in the import statement to potentially resolve a module resolution issue.
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';

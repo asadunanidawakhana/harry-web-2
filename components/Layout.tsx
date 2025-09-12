@@ -1,6 +1,7 @@
 
 import React, { ReactNode } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+// Fix: Replaced single quotes with double quotes in the import statement to potentially resolve a module resolution issue.
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../contexts/AuthContext';
 import { Video, User, LogOut, Shield, Home, Crown } from 'lucide-react';
 

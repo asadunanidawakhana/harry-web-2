@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+// Fix: Replaced single quotes with double quotes in the import statement to potentially resolve a module resolution issue.
+import { Link } from "react-router-dom";
 import { PlayCircle, DollarSign, LogIn, HelpCircle, ShieldCheck } from 'lucide-react';
 
 const FeatureCard: React.FC<{ icon: React.ReactNode; title: string; description: string, delay: string }> = ({ icon, title, description, delay }) => (

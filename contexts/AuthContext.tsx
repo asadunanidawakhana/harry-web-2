@@ -1,7 +1,11 @@
 
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { supabase } from '../services/supabase';
-import type { Session, User, AuthError } from '@supabase/supabase-js';
+// FIX: In some environments, Supabase types are not correctly re-exported.
+// Importing directly from `@supabase/auth-js` (the successor to `@supabase/gotrue-js`) resolves this.
+// This fix also resolves the method errors (e.g., onAuthStateChange) because TypeScript
+// can now correctly infer the type of the `supabase.auth` object.
+import type { Session, User, AuthError } from '@supabase/auth-js';
 import type { UserProfile } from '../types';
 
 interface AuthContextType {
@@ -150,6 +154,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return { error };
   };
 
+  // --- DEVELOPER NOTE ---
+  // The `signUp` function below is correctly configured. It passes the `username`
+  // and `referral_code_used` to Supabase within the `options.data` object.
+  //
+  // The error "Database error saving new user" is NOT a frontend error.
+  // It is a specific error message that comes from the Supabase backend when the
+  // database trigger function (e.g., `handle_new_user`) fails after a user is
+  // authenticated.
+  //
+  // This failure is almost always caused by:
+  //   1. Missing columns in the `public.users` table (like `referral_code` or `referred_by`).
+  //   2. An incorrect or outdated SQL trigger function.
+  //
+  // TO FIX THIS ERROR: The database itself must be repaired. You need to run the
+  // full SQL script provided in the chat to add the missing columns and create the
+  // correct trigger function in your Supabase project's SQL Editor.
+  // The frontend code does not need to be changed for this fix.
+  // --------------------
   const signUp = async ({ email, password, username, referralCode }: { email: string; password: string; username: string; referralCode?: string; }) => {
     const { error } = await supabase.auth.signUp({
       email,

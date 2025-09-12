@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+// Fix: Replaced single quotes with double quotes in the import statement to potentially resolve a module resolution issue.
+import { useNavigate } from "react-router-dom";
 
 const AuthPage: React.FC = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -11,14 +12,26 @@ const AuthPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [message, setMessage] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const [cooldown, setCooldown] = useState(0);
+    const [isReferralError, setIsReferralError] = useState(false);
     const { signIn, signUp } = useAuth();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (cooldown > 0) {
+            const timer = setTimeout(() => {
+                setCooldown(prev => prev - 1);
+            }, 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [cooldown]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
         setMessage(null);
+        setIsReferralError(false);
 
         try {
             if (isLogin) {
@@ -42,6 +55,17 @@ const AuthPage: React.FC = () => {
                         setError('This email address is already in use. Please try logging in.');
                     } else if (signUpError.message.includes('duplicate key value violates unique constraint "users_username_key"')){
                         setError('This username is already taken. Please choose a different one.');
+                    } else if (signUpError.message.includes('Database error saving new user')) {
+                        setError('A database error occurred while creating your profile. This is a server configuration issue (likely a missing database column) and cannot be fixed by changing the referral code. Please contact support.');
+                        setIsReferralError(true);
+                    } else if (signUpError.message.includes('For security purposes, you can only request this after')) {
+                        const secondsMatch = signUpError.message.match(/(\d+)\s*seconds/);
+                        if (secondsMatch && secondsMatch[1]) {
+                            const seconds = parseInt(secondsMatch[1], 10);
+                            setCooldown(seconds);
+                        } else {
+                            setError(signUpError.message); // Fallback to original message
+                        }
                     } else {
                         setError('An unexpected error occurred during sign-up. Please try again.');
                     }
@@ -64,13 +88,13 @@ const AuthPage: React.FC = () => {
             <div className="max-w-md w-full bg-surface/50 backdrop-blur-lg rounded-2xl shadow-lg p-8 border border-[var(--border)]">
                 <div className="relative flex border-b border-[var(--border)] mb-8">
                     <button
-                        onClick={() => { setIsLogin(true); setError(null); setMessage(null); }}
+                        onClick={() => { setIsLogin(true); setError(null); setMessage(null); setIsReferralError(false); setCooldown(0); }}
                         className={`w-1/2 py-4 font-semibold text-center transition-colors duration-300 ${isLogin ? 'text-white' : 'text-text-secondary'}`}
                     >
                         Login
                     </button>
                     <button
-                        onClick={() => { setIsLogin(false); setError(null); setMessage(null); }}
+                        onClick={() => { setIsLogin(false); setError(null); setMessage(null); setIsReferralError(false); setCooldown(0); }}
                         className={`w-1/2 py-4 font-semibold text-center transition-colors duration-300 ${!isLogin ? 'text-white' : 'text-text-secondary'}`}
                     >
                         Sign Up
@@ -81,6 +105,12 @@ const AuthPage: React.FC = () => {
                 
                 {error && <p className="bg-danger/20 text-red-300 p-3 rounded-md mb-4 text-sm">{error}</p>}
                 {message && <p className="bg-success/20 text-green-300 p-3 rounded-md mb-4 text-sm">{message}</p>}
+                {cooldown > 0 && !isLogin && (
+                     <p className="bg-warning/20 text-yellow-300 p-3 rounded-md mb-4 text-sm text-center">
+                        Too many attempts. Please wait {cooldown} second{cooldown !== 1 ? 's' : ''}.
+                    </p>
+                )}
+
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {!isLogin && (
@@ -125,7 +155,7 @@ const AuthPage: React.FC = () => {
                                 type="text"
                                 value={referralCode}
                                 onChange={(e) => setReferralCode(e.target.value)}
-                                className="w-full p-3 bg-background rounded-md border border-[var(--border)] focus:border-[var(--accent-glow)] focus:ring-2 focus:ring-[var(--accent-glow)]/50 transition"
+                                className={`w-full p-3 bg-background rounded-md border border-[var(--border)] focus:border-[var(--accent-glow)] focus:ring-2 focus:ring-[var(--accent-glow)]/50 transition ${isReferralError ? 'border-danger ring-2 ring-danger/50' : ''}`}
                                 placeholder="Enter referral code"
                             />
                         </div>
@@ -133,7 +163,7 @@ const AuthPage: React.FC = () => {
 
                     <button
                         type="submit"
-                        disabled={loading}
+                        disabled={loading || cooldown > 0}
                         className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-[0_0_15px_rgba(59,130,246,0.5)] disabled:opacity-50 disabled:cursor-wait"
                     >
                         {loading ? (

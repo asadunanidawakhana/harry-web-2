@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../services/supabase';
@@ -468,9 +469,9 @@ const WithdrawTab: React.FC = () => {
 
     const canWithdraw = () => {
         if (!profile) return { available: false, nextDate: null };
-        if (!profile.last_withdrawal_at) return { available: true, nextDate: null };
+        if (!profile.last_withdraw) return { available: true, nextDate: null };
 
-        const lastDate = new Date(profile.last_withdrawal_at);
+        const lastDate = new Date(profile.last_withdraw);
         
         const today = new Date();
         const dayOfWeek = today.getDay(); // Sunday = 0, Monday = 1, etc.
@@ -541,10 +542,10 @@ const WithdrawTab: React.FC = () => {
             }
             
             // To update the UI to show the new weekly restriction immediately,
-            // we manually insert a temporary `last_withdrawal_at` into the profile state
+            // we manually insert a temporary `last_withdraw` into the profile state
             // and then refetch in the background for consistency.
             if(profile){
-                 profile.last_withdrawal_at = new Date().toISOString();
+                 profile.last_withdraw = new Date().toISOString();
             }
 
             await refetchProfile();
@@ -746,21 +747,25 @@ const ReferralsTab: React.FC = () => {
                     <div className="flex items-center gap-2 bg-background p-3 rounded-lg border border-[var(--border)]">
                         <input
                             type="text"
-                            value={profile.referral_code || 'N/A'}
+                            value={profile.referral_code || 'No code generated yet.'}
                             readOnly
                             className="bg-transparent w-full text-lg font-mono text-text-primary focus:outline-none"
                         />
-                        <button onClick={handleCopy} className="bg-primary-600 text-white px-3 py-1.5 rounded-md text-sm font-semibold hover:bg-primary-500 transition-colors flex items-center gap-1.5">
+                        <button onClick={handleCopy} disabled={!profile.referral_code} className="bg-primary-600 text-white px-3 py-1.5 rounded-md text-sm font-semibold hover:bg-primary-500 transition-colors flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed">
                             {copySuccess ? <CheckCircle size={14} /> : <Copy size={14} />}
                             {copySuccess || 'Copy'}
                         </button>
                     </div>
                 </div>
-                <div className="bg-surface p-6 rounded-xl border border-[var(--border)] text-center">
-                    <h3 className="text-xl font-semibold text-white mb-2">Total Referral Earnings</h3>
-                    <p className="text-4xl font-extrabold text-green-400">PKR {profile.referral_earnings?.toFixed(2) || '0.00'}</p>
-                     <h3 className="text-xl font-semibold text-white mb-2 mt-4">Total Referrals</h3>
-                     <p className="text-4xl font-extrabold text-blue-400">{referredUsers.length}</p>
+                <div className="bg-surface p-6 rounded-xl border border-[var(--border)] grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+                    <div>
+                        <h3 className="text-lg font-semibold text-text-secondary mb-2">Total Referral Earnings</h3>
+                        <p className="text-4xl font-extrabold text-green-400">PKR {profile.referral_earnings?.toFixed(2) || '0.00'}</p>
+                    </div>
+                     <div>
+                        <h3 className="text-lg font-semibold text-text-secondary mb-2">Total Referrals</h3>
+                        <p className="text-4xl font-extrabold text-blue-400">{referredUsers.length}</p>
+                    </div>
                 </div>
             </div>
 
@@ -824,6 +829,14 @@ const DashboardPage: React.FC = () => {
     
     if(!profile) return null;
 
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour < 12) return "Good morning";
+        if (hour < 18) return "Good afternoon";
+        return "Good evening";
+    };
+    const greeting = getGreeting();
+
     const getPlanExpiryDate = () => {
         if (!profile.plan_activated_at || !profile.plans) return null;
         const activationDate = new Date(profile.plan_activated_at);
@@ -835,7 +848,7 @@ const DashboardPage: React.FC = () => {
     return (
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
             <header className="mb-10 animate-fadeInUp">
-                <h1 className="text-4xl md:text-5xl font-extrabold text-white">Welcome, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">{profile.username}</span>!</h1>
+                <h1 className="text-4xl md:text-5xl font-extrabold text-white">{greeting}, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">{profile.username}</span>!</h1>
                 <div className="mt-6 flex flex-wrap gap-x-8 gap-y-4 items-center bg-surface/50 backdrop-blur-sm border border-[var(--border)] p-6 rounded-xl">
                     <div className="text-lg">Balance: <span className="font-bold text-green-400 text-2xl">PKR {profile.balance.toFixed(2)}</span></div>
                     {profile.isPlanCurrentlyActive && profile.plans ? (
