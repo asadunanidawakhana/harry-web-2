@@ -10,23 +10,15 @@ const getYouTubeVideoId = (url: string): string | null => {
     if (!url) return null;
     let videoId: string | null = null;
     try {
-        const standardUrlMatch = url.match(/[?&]v=([^&]+)/);
-        if (standardUrlMatch) {
-            videoId = standardUrlMatch[1];
-        } else {
-            const shortUrlMatch = url.match(/youtu\.be\/([^?]+)/);
-            if (shortUrlMatch) {
-                videoId = shortUrlMatch[1];
-            } else {
-                const embedUrlMatch = url.match(/embed\/([^?]+)/);
-                if (embedUrlMatch) {
-                    videoId = embedUrlMatch[1];
-                }
-            }
+        // This regex handles standard, short, embed, and shorts URLs.
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|&v=)([^#&?]*).*/;
+        const match = url.match(regExp);
+
+        if (match && match[2].length === 11) {
+            videoId = match[2];
         }
     } catch (e) {
         console.error("Could not parse YouTube URL", e);
-        return null;
     }
     return videoId;
 };
