@@ -119,11 +119,11 @@ const ManageTransactions = () => {
                     plan_activated_at: new Date().toISOString()
                 }).eq('id', tx.user_id);
 
-                if (userUpdateError) throw userUpdateError;
+                if (userUpdateError) throw new Error(userUpdateError.message);
             }
 
             const { error: updateError } = await supabase.from('transactions').update({ status: newStatus }).eq('id', tx.id);
-            if (updateError) throw updateError;
+            if (updateError) throw new Error(updateError.message);
             
             fetchTransactions();
         } catch(e: any) {
@@ -202,7 +202,7 @@ const ManageWithdrawals = () => {
             const { error: userUpdateError } = await supabase.from('users')
                 .update({ balance: newBalance, last_withdraw: new Date().toISOString() })
                 .eq('id', wd.user_id);
-            if (userUpdateError) throw userUpdateError;
+            if (userUpdateError) throw new Error(userUpdateError.message);
 
             // Then, update withdrawal status
             const { error: updateError } = await supabase.from('withdrawals').update({ status: 'approved' }).eq('id', wd.id);
@@ -215,7 +215,8 @@ const ManageWithdrawals = () => {
             fetchWithdrawals();
         } catch(e: any) {
             console.error("Withdrawal approval failed:", e);
-            setError(`Approval failed: ${e.message}`);
+            const errorMessage = e?.message || 'An unexpected error occurred. Please check console for details.';
+            setError(`Approval failed: ${errorMessage}`);
         }
     };
 
@@ -309,7 +310,7 @@ const ManageVideos = () => {
                 ? await supabase.from('videos').update(videoData).eq('id', currentVideo.id)
                 : await supabase.from('videos').insert([videoData]);
 
-            if (queryError) throw queryError;
+            if (queryError) throw new Error(queryError.message);
             
             setShowModal(false);
             setCurrentVideo(null);
