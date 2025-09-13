@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../services/supabase';
 import type { UserProfile, Transaction, Video, Withdrawal, Plan } from '../types';
@@ -103,7 +104,7 @@ const ManageTransactions = () => {
                 if (isFirstPlan && referrerId) {
                     const { error: rpcError } = await supabase.rpc('award_referral_bonus', {
                         p_referrer_id: referrerId,
-                        bonus_amount: 100
+                        bonus_amount: 400
                     });
 
                     if (rpcError) {

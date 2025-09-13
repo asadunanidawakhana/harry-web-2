@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../services/supabase';
@@ -503,8 +504,8 @@ const WithdrawTab: React.FC = () => {
             setError("Please enter a valid amount.");
             return;
         }
-        if (numericAmount < 200) {
-            setError("Minimum withdrawal amount is 200 PKR.");
+        if (numericAmount < 500) {
+            setError("Minimum withdrawal amount is 500 PKR.");
             return;
         }
         if (numericAmount > profile.balance) {
@@ -567,7 +568,7 @@ const WithdrawTab: React.FC = () => {
                 <form onSubmit={handleSubmit} className="space-y-6">
                      <div>
                         <label className="text-sm font-bold text-text-secondary block mb-2">Withdrawal Amount (PKR)</label>
-                        <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} required placeholder="Minimum 200" disabled={!available} className="w-full p-3 bg-background rounded-md border border-[var(--border)] focus:border-[var(--accent-glow)] focus:ring-2 focus:ring-[var(--accent-glow)]/50 transition disabled:opacity-50" />
+                        <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} required placeholder="Minimum 500" disabled={!available} className="w-full p-3 bg-background rounded-md border border-[var(--border)] focus:border-[var(--accent-glow)] focus:ring-2 focus:ring-[var(--accent-glow)]/50 transition disabled:opacity-50" />
                     </div>
                     <div>
                         <label className="text-sm font-bold text-text-secondary block mb-2">Payment Method</label>
@@ -735,7 +736,7 @@ const ReferralsTab: React.FC = () => {
             <div className="grid md:grid-cols-2 gap-8 mb-8">
                 <div className="bg-surface p-6 rounded-xl border border-[var(--border)]">
                     <h3 className="text-xl font-semibold text-white mb-3">Your Referral Code</h3>
-                    <p className="text-text-secondary mb-4">Share this code with your friends. When they sign up and purchase their first plan, you'll receive a bonus of 100 PKR!</p>
+                    <p className="text-text-secondary mb-4">Share this code with your friends. When they sign up and purchase their first plan, you'll receive a bonus of 400 PKR!</p>
                     <div className="flex items-center gap-2 bg-background p-3 rounded-lg border border-[var(--border)]">
                         <input
                             type="text"
