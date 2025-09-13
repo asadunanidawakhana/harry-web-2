@@ -5,16 +5,16 @@ import { Link } from "react-router-dom";
 import { PlayCircle, DollarSign, LogIn, HelpCircle, ShieldCheck } from 'lucide-react';
 
 const FeatureCard: React.FC<{ icon: React.ReactNode; title: string; description: string, delay: string }> = ({ icon, title, description, delay }) => (
-    <div className="bg-surface/50 backdrop-blur-sm p-8 rounded-xl border border-[var(--border)] text-center transform hover:-translate-y-2 transition-all duration-300 animate-fadeInUp" style={{animationDelay: delay}}>
-        <div className="flex justify-center mb-5 text-[var(--accent-glow)]">{icon}</div>
+    <div className="bg-surface/50 backdrop-blur-sm p-8 rounded-xl border border-border text-center transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-sky-500/10 animate-fadeInUp" style={{animationDelay: delay}}>
+        <div className="flex justify-center mb-5 text-accent-glow">{icon}</div>
         <h3 className="text-xl font-bold mb-3 text-text-primary">{title}</h3>
         <p className="text-text-secondary">{description}</p>
     </div>
 );
 
 const FAQItem: React.FC<{ question: string; answer: string }> = ({ question, answer }) => (
-    <div className="bg-surface p-6 rounded-lg border border-[var(--border)]">
-        <h4 className="font-semibold text-lg text-[var(--accent-glow)]">{question}</h4>
+    <div className="bg-surface p-6 rounded-lg border border-border hover:border-accent-glow/50">
+        <h4 className="font-semibold text-lg text-accent-glow">{question}</h4>
         <p className="text-text-secondary mt-2">{answer}</p>
     </div>
 );
@@ -25,16 +25,16 @@ const HomePage: React.FC = () => {
             {/* Hero Section */}
             <section className="relative text-center py-24 sm:py-40 px-4">
                 <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
-                <div className="absolute top-1/2 left-1/2 w-[50rem] h-[50rem] -translate-x-1/2 -translate-y-1/2 bg-gradient-to-tr from-blue-900/50 via-purple-900/50 to-transparent rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute top-1/2 left-1/2 w-[50rem] h-[50rem] -translate-x-1/2 -translate-y-1/2 bg-gradient-to-tr from-sky-900/50 via-indigo-900/50 to-transparent rounded-full blur-3xl animate-pulse"></div>
                 <div className="relative z-10 animate-fadeInUp">
-                    <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-400">
+                    <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-indigo-400">
                         Watch Videos, Earn Daily
                     </h1>
                     <p className="max-w-3xl mx-auto text-lg text-text-secondary mb-10">
                         Join VidEarn, pick a plan, and turn your spare time into daily earnings. Watch videos to claim your reward and withdraw once a week.
                     </p>
                     <div className="flex justify-center gap-4">
-                        <Link to="/auth" className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 text-white font-bold py-4 px-8 rounded-lg transition duration-300 text-lg shadow-[0_0_20px_rgba(59,130,246,0.5)]">
+                        <Link to="/auth" className="flex items-center gap-2 bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600 text-white font-bold py-4 px-8 rounded-lg text-lg shadow-lg shadow-sky-500/20 hover:shadow-xl hover:shadow-sky-500/30 transform hover:-translate-y-1">
                             <LogIn size={22} /> Get Started Now
                         </Link>
                     </div>

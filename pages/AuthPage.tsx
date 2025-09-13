@@ -85,28 +85,28 @@ const AuthPage: React.FC = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background p-4 animate-fadeInUp">
-            <div className="max-w-md w-full bg-surface/50 backdrop-blur-lg rounded-2xl shadow-lg p-8 border border-[var(--border)]">
-                <div className="relative flex border-b border-[var(--border)] mb-8">
+            <div className="max-w-md w-full bg-surface/50 backdrop-blur-lg rounded-2xl shadow-2xl shadow-sky-900/10 p-8 border border-border">
+                <div className="relative flex border-b border-border mb-8">
                     <button
                         onClick={() => { setIsLogin(true); setError(null); setMessage(null); setIsReferralError(false); setCooldown(0); }}
-                        className={`w-1/2 py-4 font-semibold text-center transition-colors duration-300 ${isLogin ? 'text-white' : 'text-text-secondary'}`}
+                        className={`w-1/2 py-4 font-semibold text-center transition-colors duration-300 ${isLogin ? 'text-text-primary' : 'text-text-secondary'}`}
                     >
                         Login
                     </button>
                     <button
                         onClick={() => { setIsLogin(false); setError(null); setMessage(null); setIsReferralError(false); setCooldown(0); }}
-                        className={`w-1/2 py-4 font-semibold text-center transition-colors duration-300 ${!isLogin ? 'text-white' : 'text-text-secondary'}`}
+                        className={`w-1/2 py-4 font-semibold text-center transition-colors duration-300 ${!isLogin ? 'text-text-primary' : 'text-text-secondary'}`}
                     >
                         Sign Up
                     </button>
-                     <div className="absolute bottom-0 w-1/2 h-0.5 bg-[var(--accent-glow)] transition-transform duration-300 ease-out" style={{ transform: isLogin ? 'translateX(0%)' : 'translateX(100%)' }}></div>
+                     <div className="absolute bottom-0 w-1/2 h-0.5 bg-accent-glow transition-transform duration-300 ease-out" style={{ transform: isLogin ? 'translateX(0%)' : 'translateX(100%)' }}></div>
                 </div>
                 <h2 className="text-2xl font-bold text-center text-white mb-6">{isLogin ? 'Welcome Back!' : 'Create an Account'}</h2>
                 
-                {error && <p className="bg-danger/20 text-red-300 p-3 rounded-md mb-4 text-sm">{error}</p>}
-                {message && <p className="bg-success/20 text-green-300 p-3 rounded-md mb-4 text-sm">{message}</p>}
+                {error && <p className="bg-danger/20 text-red-300 p-3 rounded-md mb-4 text-sm animate-slideInUp">{error}</p>}
+                {message && <p className="bg-success/20 text-green-300 p-3 rounded-md mb-4 text-sm animate-slideInUp">{message}</p>}
                 {cooldown > 0 && !isLogin && (
-                     <p className="bg-warning/20 text-yellow-300 p-3 rounded-md mb-4 text-sm text-center">
+                     <p className="bg-warning/20 text-yellow-300 p-3 rounded-md mb-4 text-sm text-center animate-slideInUp">
                         Too many attempts. Please wait {cooldown} second{cooldown !== 1 ? 's' : ''}.
                     </p>
                 )}
@@ -121,7 +121,7 @@ const AuthPage: React.FC = () => {
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 required
-                                className="w-full p-3 bg-background rounded-md border border-[var(--border)] focus:border-[var(--accent-glow)] focus:ring-2 focus:ring-[var(--accent-glow)]/50 transition"
+                                className="w-full p-3 bg-background rounded-md border border-border focus:border-accent-glow focus:ring-2 focus:ring-accent-glow/50"
                                 placeholder="Choose a username"
                             />
                         </div>
@@ -133,7 +133,7 @@ const AuthPage: React.FC = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
-                            className="w-full p-3 bg-background rounded-md border border-[var(--border)] focus:border-[var(--accent-glow)] focus:ring-2 focus:ring-[var(--accent-glow)]/50 transition"
+                            className="w-full p-3 bg-background rounded-md border border-border focus:border-accent-glow focus:ring-2 focus:ring-accent-glow/50"
                             placeholder="you@example.com"
                         />
                     </div>
@@ -144,7 +144,7 @@ const AuthPage: React.FC = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            className="w-full p-3 bg-background rounded-md border border-[var(--border)] focus:border-[var(--accent-glow)] focus:ring-2 focus:ring-[var(--accent-glow)]/50 transition"
+                            className="w-full p-3 bg-background rounded-md border border-border focus:border-accent-glow focus:ring-2 focus:ring-accent-glow/50"
                             placeholder="••••••••"
                         />
                     </div>
@@ -155,7 +155,7 @@ const AuthPage: React.FC = () => {
                                 type="text"
                                 value={referralCode}
                                 onChange={(e) => setReferralCode(e.target.value)}
-                                className={`w-full p-3 bg-background rounded-md border border-[var(--border)] focus:border-[var(--accent-glow)] focus:ring-2 focus:ring-[var(--accent-glow)]/50 transition ${isReferralError ? 'border-danger ring-2 ring-danger/50' : ''}`}
+                                className={`w-full p-3 bg-background rounded-md border border-border focus:border-accent-glow focus:ring-2 focus:ring-accent-glow/50 ${isReferralError ? 'border-danger ring-2 ring-danger/50' : ''}`}
                                 placeholder="Enter referral code"
                             />
                         </div>
@@ -164,7 +164,7 @@ const AuthPage: React.FC = () => {
                     <button
                         type="submit"
                         disabled={loading || cooldown > 0}
-                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-[0_0_15px_rgba(59,130,246,0.5)] disabled:opacity-50 disabled:cursor-wait"
+                        className="w-full bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg shadow-sky-500/20 hover:shadow-sky-500/30 disabled:opacity-50 disabled:cursor-wait"
                     >
                         {loading ? (
                             <div className="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin mx-auto"></div>

@@ -39,17 +39,17 @@ const AdminDashboard = () => {
     }, []);
 
     const StatCard: React.FC<{title: string, value: string | number, loading: boolean}> = ({ title, value, loading }) => (
-         <div className="bg-surface p-6 rounded-xl border border-[var(--border)]">
+         <div className="bg-surface p-6 rounded-xl border border-border">
             <h3 className="text-text-secondary text-sm font-medium">{title}</h3>
             {loading ? 
                 <div className="h-9 mt-1 w-2/3 bg-background/50 rounded animate-pulse"></div> :
-                <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">{value}</p>
+                <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-indigo-400">{value}</p>
             }
         </div>
     );
 
     return (
-        <div className="animate-fadeInUp">
+        <div>
             <h2 className="text-3xl font-bold mb-6">Dashboard Overview</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <StatCard title="Total Users" value={stats.users} loading={loading} />
@@ -139,18 +139,18 @@ const ManageTransactions = () => {
 
 
     return (
-        <div className="animate-fadeInUp">
+        <div>
             <h2 className="text-3xl font-bold mb-6">Manage Plan Purchases</h2>
             {error && <AdminError message={error} onDismiss={() => setError(null)} />}
-            <div className="bg-surface rounded-xl border border-[var(--border)] overflow-hidden"><div className="overflow-x-auto"><table className="min-w-full text-sm">
+            <div className="bg-surface rounded-xl border border-border overflow-hidden"><div className="overflow-x-auto"><table className="min-w-full text-sm">
                 <thead className="bg-background/50"><tr>
                     <th className="p-4 text-left text-text-secondary font-semibold">User</th><th className="p-4 text-left text-text-secondary font-semibold">Plan</th><th className="p-4 text-left text-text-secondary font-semibold">Amount</th>
                     <th className="p-4 text-left text-text-secondary font-semibold">Screenshot</th><th className="p-4 text-left text-text-secondary font-semibold">Status</th><th className="p-4 text-left text-text-secondary font-semibold">Actions</th>
                 </tr></thead>
-                <tbody className="divide-y divide-[var(--border)]">
+                <tbody className="divide-y divide-border">
                     {transactions.map(tx => (<tr key={tx.id} className="hover:bg-background/30">
                         <td className="p-4">{tx.users?.username || tx.users?.email || 'N/A'}</td><td>{tx.plans?.name || 'N/A'}</td><td>PKR {tx.amount}</td>
-                        <td><a href={tx.screenshot_url} target="_blank" rel="noopener noreferrer" className="text-[var(--accent-glow)] hover:underline flex items-center gap-1"><Eye size={14}/> View</a></td>
+                        <td><a href={tx.screenshot_url} target="_blank" rel="noopener noreferrer" className="text-accent-glow hover:underline flex items-center gap-1"><Eye size={14}/> View</a></td>
                         <td className="capitalize">{tx.status}</td><td>
                             {tx.status === 'pending' && (
                                 <div className="flex gap-2">
@@ -237,15 +237,15 @@ const ManageWithdrawals = () => {
     };
 
     return (
-        <div className="animate-fadeInUp">
+        <div>
             <h2 className="text-3xl font-bold mb-6">Manage Withdrawals</h2>
             {error && <AdminError message={error} onDismiss={() => setError(null)} />}
-            <div className="bg-surface rounded-xl border border-[var(--border)] overflow-hidden"><div className="overflow-x-auto"><table className="min-w-full text-sm">
+            <div className="bg-surface rounded-xl border border-border overflow-hidden"><div className="overflow-x-auto"><table className="min-w-full text-sm">
                 <thead className="bg-background/50"><tr>
                     <th className="p-4 text-left text-text-secondary font-semibold">User</th><th className="p-4 text-left text-text-secondary font-semibold">Amount</th><th className="p-4 text-left text-text-secondary font-semibold">Method</th>
                     <th className="p-4 text-left text-text-secondary font-semibold">Account Info</th><th className="p-4 text-left text-text-secondary font-semibold">Status</th><th className="p-4 text-left text-text-secondary font-semibold">Actions</th>
                 </tr></thead>
-                <tbody className="divide-y divide-[var(--border)]">
+                <tbody className="divide-y divide-border">
                     {withdrawals.map(wd => (<tr key={wd.id} className="hover:bg-background/30">
                         <td className="p-4">{wd.users?.username || wd.users?.email || 'N/A'}</td>
                         <td className="p-4">PKR {wd.amount.toFixed(2)}</td>
@@ -342,17 +342,17 @@ const ManageVideos = () => {
     };
     
     return (
-        <div className="animate-fadeInUp">
+        <div>
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-3xl font-bold">Manage Videos</h2>
-                <button onClick={() => { setCurrentVideo({}); setShowModal(true); }} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 text-white font-bold py-2 px-4 rounded-md flex items-center gap-2"><PlusCircle size={16}/> Add Video</button>
+                <button onClick={() => { setCurrentVideo({}); setShowModal(true); }} className="bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg shadow-sky-500/20 flex items-center gap-2"><PlusCircle size={16}/> Add Video</button>
             </div>
             {error && <AdminError message={error} onDismiss={() => setError(null)} />}
-            <div className="bg-surface rounded-xl border border-[var(--border)] overflow-hidden"><div className="overflow-x-auto"><table className="min-w-full text-sm">
+            <div className="bg-surface rounded-xl border border-border overflow-hidden"><div className="overflow-x-auto"><table className="min-w-full text-sm">
                 <thead className="bg-background/50"><tr>
                     <th className="p-4 text-left text-text-secondary font-semibold">Title</th><th className="p-4 text-left text-text-secondary font-semibold">URL</th><th className="p-4 text-left text-text-secondary font-semibold">Actions</th>
                 </tr></thead>
-                <tbody className="divide-y divide-[var(--border)]">
+                <tbody className="divide-y divide-border">
                     {videos.map(v => (<tr key={v.id} className="hover:bg-background/30">
                         <td className="p-4">{v.title}</td><td>{v.video_url}</td>
                         <td className="p-4"><div className="flex gap-2">
@@ -362,13 +362,13 @@ const ManageVideos = () => {
                     </tr>))}
                 </tbody>
             </table></div></div>
-            {showModal && (<div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-md flex items-center justify-center z-50 p-4"><div className="bg-surface/90 rounded-xl p-8 max-w-lg w-full border border-[var(--border)]">
+            {showModal && (<div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fadeInUp"><div className="bg-surface/90 rounded-xl p-8 max-w-lg w-full border border-border">
                 <h3 className="text-2xl font-bold mb-6">{currentVideo?.id ? 'Edit' : 'Add'} Video</h3>
                 {error && <AdminError message={error} onDismiss={() => setError(null)} />}
                 <div className="space-y-4">
-                    <input type="text" placeholder="Title" value={currentVideo?.title || ''} onChange={e => setCurrentVideo({...currentVideo, title: e.target.value})} className="w-full p-3 bg-background rounded-md border border-[var(--border)]"/>
-                    <textarea placeholder="Description" value={currentVideo?.description || ''} onChange={e => setCurrentVideo({...currentVideo, description: e.target.value})} className="w-full p-3 bg-background rounded-md border border-[var(--border)]"/>
-                    <input type="text" placeholder="YouTube Video URL" value={currentVideo?.video_url || ''} onChange={e => setCurrentVideo({...currentVideo, video_url: e.target.value})} className="w-full p-3 bg-background rounded-md border border-[var(--border)]"/>
+                    <input type="text" placeholder="Title" value={currentVideo?.title || ''} onChange={e => setCurrentVideo({...currentVideo, title: e.target.value})} className="w-full p-3 bg-background rounded-md border border-border focus:border-accent-glow focus:ring-2 focus:ring-accent-glow/50"/>
+                    <textarea placeholder="Description" value={currentVideo?.description || ''} onChange={e => setCurrentVideo({...currentVideo, description: e.target.value})} className="w-full p-3 bg-background rounded-md border border-border focus:border-accent-glow focus:ring-2 focus:ring-accent-glow/50"/>
+                    <input type="text" placeholder="YouTube Video URL" value={currentVideo?.video_url || ''} onChange={e => setCurrentVideo({...currentVideo, video_url: e.target.value})} className="w-full p-3 bg-background rounded-md border border-border focus:border-accent-glow focus:ring-2 focus:ring-accent-glow/50"/>
                     <div>
                         <label className="text-sm text-text-secondary">Watch Duration (seconds)</label>
                         <input 
@@ -386,12 +386,12 @@ const ManageVideos = () => {
                                     }
                                 }
                             }} 
-                            className="w-full p-3 mt-1 bg-background rounded-md border border-[var(--border)]"/>
+                            className="w-full p-3 mt-1 bg-background rounded-md border border-border focus:border-accent-glow focus:ring-2 focus:ring-accent-glow/50"/>
                     </div>
                 </div>
                 <div className="flex justify-end gap-4 mt-8">
-                    <button onClick={() => { setShowModal(false); setCurrentVideo(null); setError(null); }} className="bg-background/80 hover:bg-background border border-[var(--border)] py-2 px-4 rounded-lg">Cancel</button>
-                    <button onClick={handleSave} disabled={isSaving} className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-2 px-4 rounded-lg min-w-[80px] flex justify-center disabled:opacity-50 disabled:cursor-wait">
+                    <button onClick={() => { setShowModal(false); setCurrentVideo(null); setError(null); }} className="bg-background/80 hover:bg-background border border-border py-2 px-4 rounded-lg">Cancel</button>
+                    <button onClick={handleSave} disabled={isSaving} className="bg-gradient-to-r from-sky-500 to-indigo-500 text-white font-semibold py-2 px-4 rounded-lg min-w-[80px] flex justify-center disabled:opacity-50 disabled:cursor-wait">
                          {isSaving ? <div className="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin"></div> : 'Save'}
                     </button>
                 </div>
@@ -429,15 +429,15 @@ const ManageUsers = () => {
     };
     
     return (
-        <div className="animate-fadeInUp">
+        <div>
             <h2 className="text-3xl font-bold mb-6">Manage Users</h2>
              {error && <AdminError message={error} onDismiss={() => setError(null)} />}
-            <div className="bg-surface rounded-xl border border-[var(--border)] overflow-hidden"><div className="overflow-x-auto"><table className="min-w-full text-sm">
+            <div className="bg-surface rounded-xl border border-border overflow-hidden"><div className="overflow-x-auto"><table className="min-w-full text-sm">
                 <thead className="bg-background/50"><tr>
                     <th className="p-4 text-left text-text-secondary font-semibold">Username</th><th className="p-4 text-left text-text-secondary font-semibold">Balance</th>
                     <th className="p-4 text-left text-text-secondary font-semibold">Plan</th><th className="p-4 text-left text-text-secondary font-semibold">Status</th><th className="p-4 text-left text-text-secondary font-semibold">Actions</th>
                 </tr></thead>
-                <tbody className="divide-y divide-[var(--border)]">
+                <tbody className="divide-y divide-border">
                     {users.map(user => (
                         <tr key={user.id} className="hover:bg-background/30">
                             <td className="p-4">{user.username || 'N/A'}</td><td className="p-4">{(user.balance || 0).toFixed(2)}</td>
@@ -503,18 +503,18 @@ const ManagePlans = () => {
     };
 
     return (
-        <div className="animate-fadeInUp">
+        <div>
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-3xl font-bold">Manage Plans</h2>
-                <button onClick={() => { setCurrentPlan({}); setShowModal(true); }} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 text-white font-bold py-2 px-4 rounded-md flex items-center gap-2"><PlusCircle size={16}/> Add Plan</button>
+                <button onClick={() => { setCurrentPlan({}); setShowModal(true); }} className="bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg shadow-sky-500/20 flex items-center gap-2"><PlusCircle size={16}/> Add Plan</button>
             </div>
             {error && <AdminError message={error} onDismiss={() => setError(null)} />}
-            <div className="bg-surface rounded-xl border border-[var(--border)] overflow-hidden"><div className="overflow-x-auto"><table className="min-w-full text-sm">
+            <div className="bg-surface rounded-xl border border-border overflow-hidden"><div className="overflow-x-auto"><table className="min-w-full text-sm">
                 <thead className="bg-background/50"><tr>
                     <th className="p-4 text-left text-text-secondary font-semibold">Name</th><th className="p-4 text-left text-text-secondary font-semibold">Price</th><th className="p-4 text-left text-text-secondary font-semibold">Daily Earning</th>
                     <th className="p-4 text-left text-text-secondary font-semibold">Videos/Day</th><th className="p-4 text-left text-text-secondary font-semibold">Validity</th><th className="p-4 text-left text-text-secondary font-semibold">Actions</th>
                 </tr></thead>
-                <tbody className="divide-y divide-[var(--border)]">
+                <tbody className="divide-y divide-border">
                     {plans.map(p => (<tr key={p.id} className="hover:bg-background/30">
                         <td className="p-4">{p.name}</td><td>{p.price}</td><td>{p.daily_earning}</td><td>{p.videos_per_day}</td><td>{p.validity_days} days</td>
                         <td className="p-4"><div className="flex gap-2">
@@ -524,18 +524,18 @@ const ManagePlans = () => {
                     </tr>))}
                 </tbody>
             </table></div></div>
-            {showModal && (<div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-md flex items-center justify-center z-50 p-4"><div className="bg-surface/90 rounded-xl p-8 max-w-lg w-full border border-[var(--border)]">
+            {showModal && (<div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fadeInUp"><div className="bg-surface/90 rounded-xl p-8 max-w-lg w-full border border-border">
                 <h3 className="text-2xl font-bold mb-6">{currentPlan?.id ? 'Edit' : 'Add'} Plan</h3>
                 <div className="space-y-4">
-                    <input type="text" placeholder="Plan Name" value={currentPlan?.name || ''} onChange={e => setCurrentPlan({...currentPlan, name: e.target.value})} className="w-full p-3 bg-background rounded-md border border-[var(--border)]"/>
-                    <input type="number" placeholder="Price (PKR)" value={currentPlan?.price ?? ''} onChange={e => setCurrentPlan({...currentPlan, price: parseFloat(e.target.value)})} className="w-full p-3 bg-background rounded-md border border-[var(--border)]"/>
-                    <input type="number" placeholder="Daily Earning (PKR)" value={currentPlan?.daily_earning ?? ''} onChange={e => setCurrentPlan({...currentPlan, daily_earning: parseFloat(e.target.value)})} className="w-full p-3 bg-background rounded-md border border-[var(--border)]"/>
-                    <input type="number" placeholder="Videos Per Day" value={currentPlan?.videos_per_day ?? ''} onChange={e => setCurrentPlan({...currentPlan, videos_per_day: parseInt(e.target.value)})} className="w-full p-3 bg-background rounded-md border border-[var(--border)]"/>
-                    <input type="number" placeholder="Validity (Days)" value={currentPlan?.validity_days ?? ''} onChange={e => setCurrentPlan({...currentPlan, validity_days: parseInt(e.target.value)})} className="w-full p-3 bg-background rounded-md border border-[var(--border)]"/>
+                    <input type="text" placeholder="Plan Name" value={currentPlan?.name || ''} onChange={e => setCurrentPlan({...currentPlan, name: e.target.value})} className="w-full p-3 bg-background rounded-md border border-border focus:border-accent-glow focus:ring-2 focus:ring-accent-glow/50"/>
+                    <input type="number" placeholder="Price (PKR)" value={currentPlan?.price ?? ''} onChange={e => setCurrentPlan({...currentPlan, price: parseFloat(e.target.value)})} className="w-full p-3 bg-background rounded-md border border-border focus:border-accent-glow focus:ring-2 focus:ring-accent-glow/50"/>
+                    <input type="number" placeholder="Daily Earning (PKR)" value={currentPlan?.daily_earning ?? ''} onChange={e => setCurrentPlan({...currentPlan, daily_earning: parseFloat(e.target.value)})} className="w-full p-3 bg-background rounded-md border border-border focus:border-accent-glow focus:ring-2 focus:ring-accent-glow/50"/>
+                    <input type="number" placeholder="Videos Per Day" value={currentPlan?.videos_per_day ?? ''} onChange={e => setCurrentPlan({...currentPlan, videos_per_day: parseInt(e.target.value)})} className="w-full p-3 bg-background rounded-md border border-border focus:border-accent-glow focus:ring-2 focus:ring-accent-glow/50"/>
+                    <input type="number" placeholder="Validity (Days)" value={currentPlan?.validity_days ?? ''} onChange={e => setCurrentPlan({...currentPlan, validity_days: parseInt(e.target.value)})} className="w-full p-3 bg-background rounded-md border border-border focus:border-accent-glow focus:ring-2 focus:ring-accent-glow/50"/>
                 </div>
                 <div className="flex justify-end gap-4 mt-8">
-                    <button onClick={() => { setShowModal(false); setCurrentPlan(null); }} className="bg-background/80 hover:bg-background border border-[var(--border)] py-2 px-4 rounded-lg">Cancel</button>
-                    <button onClick={handleSave} className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-2 px-4 rounded-lg">Save</button>
+                    <button onClick={() => { setShowModal(false); setCurrentPlan(null); }} className="bg-background/80 hover:bg-background border border-border py-2 px-4 rounded-lg">Cancel</button>
+                    <button onClick={handleSave} className="bg-gradient-to-r from-sky-500 to-indigo-500 text-white font-semibold py-2 px-4 rounded-lg">Save</button>
                 </div>
             </div></div>)}
         </div>
@@ -545,6 +545,15 @@ const ManagePlans = () => {
 // Main Admin Page
 const AdminPage: React.FC = () => {
     const [activeTab, setActiveTab] = useState('dashboard');
+
+    const navItems = [
+      { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { id: 'transactions', label: 'Purchases', icon: ListTodo },
+      { id: 'withdrawals', label: 'Withdrawals', icon: Banknote },
+      { id: 'plans', label: 'Plans', icon: Shield },
+      { id: 'videos', label: 'Videos', icon: Film },
+      { id: 'users', label: 'Users', icon: Users }
+    ];
 
     const renderTabContent = () => {
         switch (activeTab) {
@@ -561,17 +570,20 @@ const AdminPage: React.FC = () => {
     return (
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
              <header className="mb-10 animate-fadeInUp"><h1 className="text-4xl md:text-5xl font-extrabold text-white">Admin Panel</h1></header>
-              <div className="relative border-b border-[var(--border)] mb-8">
+              <div className="relative border-b border-border mb-8">
                  <div className="flex overflow-x-auto -mb-px">
-                    <button onClick={() => setActiveTab('dashboard')} className={`flex items-center gap-2 px-4 py-4 font-semibold ${activeTab === 'dashboard' ? 'text-white border-b-2 border-[var(--accent-glow)]' : 'text-text-secondary hover:text-white'}`}><LayoutDashboard size={16}/> Dashboard</button>
-                    <button onClick={() => setActiveTab('transactions')} className={`flex items-center gap-2 px-4 py-4 font-semibold ${activeTab === 'transactions' ? 'text-white border-b-2 border-[var(--accent-glow)]' : 'text-text-secondary hover:text-white'}`}><ListTodo size={16}/> Purchases</button>
-                    <button onClick={() => setActiveTab('withdrawals')} className={`flex items-center gap-2 px-4 py-4 font-semibold ${activeTab === 'withdrawals' ? 'text-white border-b-2 border-[var(--accent-glow)]' : 'text-text-secondary hover:text-white'}`}><Banknote size={16}/> Withdrawals</button>
-                    <button onClick={() => setActiveTab('plans')} className={`flex items-center gap-2 px-4 py-4 font-semibold ${activeTab === 'plans' ? 'text-white border-b-2 border-[var(--accent-glow)]' : 'text-text-secondary hover:text-white'}`}><Shield size={16}/> Plans</button>
-                    <button onClick={() => setActiveTab('videos')} className={`flex items-center gap-2 px-4 py-4 font-semibold ${activeTab === 'videos' ? 'text-white border-b-2 border-[var(--accent-glow)]' : 'text-text-secondary hover:text-white'}`}><Film size={16}/> Videos</button>
-                    <button onClick={() => setActiveTab('users')} className={`flex items-center gap-2 px-4 py-4 font-semibold ${activeTab === 'users' ? 'text-white border-b-2 border-[var(--accent-glow)]' : 'text-text-secondary hover:text-white'}`}><Users size={16}/> Users</button>
+                   {navItems.map(item => {
+                     const Icon = item.icon;
+                     const isActive = activeTab === item.id;
+                     return (
+                      <button key={item.id} onClick={() => setActiveTab(item.id)} className={`flex items-center gap-2 px-4 py-4 font-semibold border-b-2 ${isActive ? 'text-white border-accent-glow' : 'text-text-secondary border-transparent hover:text-white'}`}>
+                        <Icon size={16}/> {item.label}
+                      </button>
+                     );
+                   })}
                 </div>
              </div>
-             <div>{renderTabContent()}</div>
+             <div className="animate-slideInUp" key={activeTab}>{renderTabContent()}</div>
         </div>
     );
 };

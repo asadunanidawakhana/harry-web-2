@@ -1,6 +1,9 @@
 
 
 
+
+
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../services/supabase';
@@ -92,14 +95,14 @@ const VideoPlayerModal: React.FC<{
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fadeInUp">
-            <div className="bg-surface/80 backdrop-blur-lg rounded-xl shadow-2xl max-w-3xl w-full border border-[var(--border)]">
-                <div className="flex justify-between items-center p-5 border-b border-[var(--border)]">
+            <div className="bg-surface/80 backdrop-blur-lg rounded-xl shadow-2xl max-w-3xl w-full border border-border">
+                <div className="flex justify-between items-center p-5 border-b border-border">
                     <h3 className="text-xl font-bold text-white">{video.title}</h3>
-                    <button onClick={onClose} className="text-text-secondary hover:text-white transition-colors"><X size={24} /></button>
+                    <button onClick={onClose} className="text-text-secondary hover:text-white"><X size={24} /></button>
                 </div>
                 <div className="p-5">
                     {videoId ? (
-                         <div className="aspect-video bg-black rounded-lg">
+                         <div className="aspect-video bg-black rounded-lg overflow-hidden">
                             <div id="youtube-player-container" className="w-full h-full"></div>
                         </div>
                     ) : <p className="text-danger text-center p-8">Invalid video link.</p>}
@@ -117,7 +120,7 @@ const VideoPlayerModal: React.FC<{
                                     }
                                 </div>
                                 <div className="w-full bg-background/50 rounded-full h-2.5">
-                                    <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-2.5 rounded-full transition-all duration-1000 ease-linear" style={{ width: `${progress}%` }}></div>
+                                    <div className="bg-gradient-to-r from-sky-500 to-indigo-500 h-2.5 rounded-full" style={{ width: `${progress}%`, transition: 'width 1s linear' }}></div>
                                 </div>
                             </div>
                         )}
@@ -234,7 +237,7 @@ const WatchVideos: React.FC = () => {
 
     if (!isPlanActive) {
         return (
-             <div className="text-center py-20 bg-surface/50 rounded-lg border border-dashed border-[var(--border)]">
+             <div className="text-center py-20 bg-surface/50 rounded-lg border border-dashed border-border">
                 <Crown size={48} className="mx-auto text-text-secondary" />
                 <h3 className="mt-4 text-xl font-semibold">No Active Plan</h3>
                 <p className="mt-1 text-text-secondary">Please purchase a plan to start watching videos and earning.</p>
@@ -243,15 +246,15 @@ const WatchVideos: React.FC = () => {
     }
 
     return (
-        <div className="animate-fadeInUp">
-            <div className="bg-surface p-6 rounded-xl border border-[var(--border)] mb-8">
+        <div>
+            <div className="bg-surface p-6 rounded-xl border border-border mb-8">
                 <h2 className="text-2xl font-bold mb-4">Your Daily Goal</h2>
                 {error && <p className="bg-danger/20 text-red-300 p-3 rounded-md mb-4 text-sm">{error}</p>}
                 {message && <p className="bg-success/20 text-green-300 p-3 rounded-md mb-4 text-sm">{message}</p>}
                 
                 <div className="flex items-center gap-4 mb-4">
                     <div className="w-full bg-background/50 rounded-full h-4">
-                        <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-4 rounded-full" style={{ width: `${Math.min(100, (watchedTodayIds.length / (plan?.videos_per_day || 1)) * 100)}%` }}></div>
+                        <div className="bg-gradient-to-r from-sky-500 to-indigo-500 h-4 rounded-full" style={{ width: `${Math.min(100, (watchedTodayIds.length / (plan?.videos_per_day || 1)) * 100)}%` }}></div>
                     </div>
                     <span className="font-bold text-lg">{watchedTodayIds.length}/{plan?.videos_per_day}</span>
                 </div>
@@ -259,7 +262,7 @@ const WatchVideos: React.FC = () => {
                  <button
                     onClick={handleClaimReward}
                     disabled={!canClaim || isClaiming}
-                    className="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:opacity-90 text-white font-bold py-3 px-4 rounded-lg transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg shadow-green-500/20 hover:shadow-green-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                  >
                     {isClaiming ? <div className="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin"></div> : hasClaimedToday ? <><CheckCircle size={16}/> Claimed for Today</> : `Claim Daily Earning (PKR ${plan?.daily_earning})`}
                  </button>
@@ -268,10 +271,10 @@ const WatchVideos: React.FC = () => {
 
             {loading ? (
                 <div className="flex justify-center items-center py-20">
-                    <div className="w-12 h-12 border-4 border-t-transparent border-[var(--accent-glow)] rounded-full animate-spin"></div>
+                    <div className="w-12 h-12 border-4 border-t-transparent border-accent-glow rounded-full animate-spin"></div>
                 </div>
             ) : videos.length === 0 ? (
-                <div className="text-center py-20 bg-surface/50 rounded-lg border border-dashed border-[var(--border)]">
+                <div className="text-center py-20 bg-surface/50 rounded-lg border border-dashed border-border">
                     <Film size={48} className="mx-auto text-text-secondary" />
                     <h3 className="mt-4 text-xl font-semibold">No Videos Available</h3>
                     <p className="mt-1 text-text-secondary">Please check back later for new videos to watch.</p>
@@ -279,16 +282,16 @@ const WatchVideos: React.FC = () => {
             ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {videos.map((video, index) => (
-                        <div key={video.id} className={`bg-surface/50 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-[var(--border)] flex flex-col justify-between transition-all duration-300 animate-fadeInUp ${watchedTodayIds.includes(video.id) ? 'opacity-50' : 'hover:border-[var(--accent-glow)]/50 hover:-translate-y-1'}`} style={{ animationDelay: `${index * 50}ms`}}>
+                        <div key={video.id} className={`bg-surface/50 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-border flex flex-col justify-between animate-slideInUp ${watchedTodayIds.includes(video.id) ? 'opacity-50' : 'hover:border-accent-glow/50 hover:-translate-y-1'}`} style={{ animationDelay: `${index * 50}ms`}}>
                             <div>
                                 <h3 className="text-xl font-semibold text-white">{video.title}</h3>
                                 <p className="text-text-secondary mt-2 mb-4 h-12 overflow-hidden">{video.description}</p>
                             </div>
-                            <div className="flex justify-end items-center mt-4 pt-4 border-t border-[var(--border)]">
+                            <div className="flex justify-end items-center mt-4 pt-4 border-t border-border">
                                 <button
                                     onClick={() => handleWatchVideo(video)}
                                     disabled={watchedTodayIds.includes(video.id)}
-                                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-2 px-4 rounded-lg transition hover:opacity-90 flex items-center gap-2 min-w-[120px] justify-center disabled:opacity-50 disabled:cursor-not-allowed disabled:from-gray-600 disabled:to-gray-700"
+                                    className="bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600 text-white font-bold py-2 px-4 rounded-lg shadow-md shadow-sky-500/10 flex items-center gap-2 min-w-[120px] justify-center disabled:opacity-50 disabled:cursor-not-allowed disabled:from-gray-600 disabled:to-gray-700"
                                 >
                                 {watchedTodayIds.includes(video.id) ? (
                                     <><CheckCircle size={16}/> Watched</>
@@ -391,14 +394,14 @@ const BuyPlan: React.FC = () => {
     
     if (selectedPlan) {
         return (
-             <div className="animate-fadeInUp">
+             <div className="animate-slideInUp">
                 <button onClick={() => setSelectedPlan(null)} className="text-sm text-text-secondary hover:text-white mb-4">&larr; Back to all plans</button>
                 <h2 className="text-3xl font-bold mb-6">Purchase: {selectedPlan.name}</h2>
                 {message && <p className="bg-success/20 text-green-300 p-3 rounded-md mb-4 text-sm">{message}</p>}
                 {error && <p className="bg-danger/20 text-red-300 p-3 rounded-md mb-4 text-sm">{error}</p>}
-                <div className="bg-surface p-8 rounded-xl border border-[var(--border)] max-w-2xl mx-auto">
-                    <div className="mb-8 p-5 bg-background/50 border border-[var(--accent-glow)]/30 rounded-lg">
-                        <h3 className="text-lg font-semibold text-[var(--accent-glow)] mb-2">Payment Instructions</h3>
+                <div className="bg-surface p-8 rounded-xl border border-border max-w-2xl mx-auto">
+                    <div className="mb-8 p-5 bg-background/50 border border-accent-glow/30 rounded-lg">
+                        <h3 className="text-lg font-semibold text-accent-glow mb-2">Payment Instructions</h3>
                         <p className="text-text-secondary">Please send <strong className="text-white">PKR {selectedPlan.price}</strong> to the following account:</p>
                         <ul className="list-none mt-2 space-y-1 text-text-primary">
                             <li><strong>Name:</strong> Maria</li>
@@ -409,13 +412,13 @@ const BuyPlan: React.FC = () => {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
                             <label className="text-sm font-bold text-text-secondary block mb-2">Transaction ID (TID)</label>
-                            <input type="text" value={tid} onChange={(e) => setTid(e.target.value)} required className="w-full p-3 bg-background rounded-md border border-[var(--border)] focus:border-[var(--accent-glow)] focus:ring-2 focus:ring-[var(--accent-glow)]/50 transition" />
+                            <input type="text" value={tid} onChange={(e) => setTid(e.target.value)} required className="w-full p-3 bg-background rounded-md border border-border focus:border-accent-glow focus:ring-2 focus:ring-accent-glow/50" />
                         </div>
                         <div>
                             <label className="text-sm font-bold text-text-secondary block mb-2">Payment Screenshot</label>
-                            <input id="screenshot-input" type="file" accept="image/*" onChange={(e) => setScreenshot(e.target.files ? e.target.files[0] : null)} required className="w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[var(--accent-glow)]/10 file:text-[var(--accent-glow)] hover:file:bg-[var(--accent-glow)]/20 cursor-pointer" />
+                            <input id="screenshot-input" type="file" accept="image/*" onChange={(e) => setScreenshot(e.target.files ? e.target.files[0] : null)} required className="w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent-glow/10 file:text-accent-glow hover:file:bg-accent-glow/20 cursor-pointer" />
                         </div>
-                        <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 text-white font-bold py-3 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                        <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600 text-white font-bold py-3 rounded-lg shadow-lg shadow-sky-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                             <Upload size={16} /> {loading ? 'Submitting...' : 'Submit Request'}
                         </button>
                     </form>
@@ -425,13 +428,13 @@ const BuyPlan: React.FC = () => {
     }
 
     return (
-        <div className="animate-fadeInUp">
-            <h2 className="text-3xl font-bold mb-6">Choose Your Plan</h2>
+        <div>
+            <h2 className="text-3xl font-bold mb-6 text-center">Choose Your Plan</h2>
             {error && <p className="bg-danger/20 text-red-300 p-3 rounded-md mb-4 text-sm">{error}</p>}
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {plans.map(plan => (
-                    <div key={plan.id} className="bg-surface p-8 rounded-xl border border-[var(--border)] flex flex-col hover:border-[var(--accent-glow)] transition-all">
-                        <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">{plan.name}</h3>
+                {plans.map((plan, index) => (
+                    <div key={plan.id} style={{animationDelay: `${index * 100}ms`}} className="bg-surface p-8 rounded-xl border border-border flex flex-col hover:border-accent-glow/80 hover:-translate-y-2 animate-slideInUp">
+                        <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-indigo-400">{plan.name}</h3>
                         <p className="text-4xl font-extrabold my-4">PKR {plan.price}</p>
                         <ul className="space-y-3 text-text-secondary mb-8 flex-grow">
                             <li className="flex items-center gap-3"><CheckCircle size={16} className="text-green-400" /> Daily Earning: PKR {plan.daily_earning}</li>
@@ -439,7 +442,7 @@ const BuyPlan: React.FC = () => {
                             <li className="flex items-center gap-3"><CheckCircle size={16} className="text-green-400" /> Validity: {plan.validity_days} Days</li>
                              <li className="flex items-center gap-3"><CheckCircle size={16} className="text-green-400" /> Weekly Withdrawals</li>
                         </ul>
-                        <button onClick={() => setSelectedPlan(plan)} className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 text-white font-bold py-3 rounded-md transition">
+                        <button onClick={() => setSelectedPlan(plan)} className="w-full bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600 text-white font-bold py-3 rounded-lg shadow-lg shadow-sky-500/20">
                             Choose Plan
                         </button>
                     </div>
@@ -555,7 +558,7 @@ const WithdrawTab: React.FC = () => {
     };
 
     return (
-        <div className="animate-fadeInUp">
+        <div>
             <h2 className="text-3xl font-bold mb-6">Request Withdrawal</h2>
              {!available && nextDate && (
                 <div className="bg-warning/20 text-yellow-300 p-4 rounded-md mb-6 text-center">
@@ -564,28 +567,28 @@ const WithdrawTab: React.FC = () => {
             )}
             {message && <p className="bg-success/20 text-green-300 p-3 rounded-md mb-4 text-sm">{message}</p>}
             {error && <p className="bg-danger/20 text-red-300 p-3 rounded-md mb-4 text-sm">{error}</p>}
-            <div className="bg-surface p-8 rounded-xl border border-[var(--border)] max-w-2xl mx-auto">
+            <div className="bg-surface p-8 rounded-xl border border-border max-w-2xl mx-auto">
                 <form onSubmit={handleSubmit} className="space-y-6">
                      <div>
                         <label className="text-sm font-bold text-text-secondary block mb-2">Withdrawal Amount (PKR)</label>
-                        <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} required placeholder="Minimum 500" disabled={!available} className="w-full p-3 bg-background rounded-md border border-[var(--border)] focus:border-[var(--accent-glow)] focus:ring-2 focus:ring-[var(--accent-glow)]/50 transition disabled:opacity-50" />
+                        <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} required placeholder="Minimum 500" disabled={!available} className="w-full p-3 bg-background rounded-md border border-border focus:border-accent-glow focus:ring-2 focus:ring-accent-glow/50 disabled:opacity-50" />
                     </div>
                     <div>
                         <label className="text-sm font-bold text-text-secondary block mb-2">Payment Method</label>
-                        <select value={method} onChange={(e) => setMethod(e.target.value)} disabled={!available} className="w-full p-3 bg-background rounded-md border border-[var(--border)] focus:border-[var(--accent-glow)] focus:ring-2 focus:ring-[var(--accent-glow)]/50 transition disabled:opacity-50">
+                        <select value={method} onChange={(e) => setMethod(e.target.value)} disabled={!available} className="w-full p-3 bg-background rounded-md border border-border focus:border-accent-glow focus:ring-2 focus:ring-accent-glow/50 disabled:opacity-50">
                             <option value="EasyPaisa">EasyPaisa</option>
                             <option value="JazzCash">JazzCash</option>
                         </select>
                     </div>
                     <div>
                         <label className="text-sm font-bold text-text-secondary block mb-2">Account Number</label>
-                        <input type="text" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} required placeholder="e.g., 03001234567" disabled={!available} className="w-full p-3 bg-background rounded-md border border-[var(--border)] focus:border-[var(--accent-glow)] focus:ring-2 focus:ring-[var(--accent-glow)]/50 transition disabled:opacity-50" />
+                        <input type="text" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} required placeholder="e.g., 03001234567" disabled={!available} className="w-full p-3 bg-background rounded-md border border-border focus:border-accent-glow focus:ring-2 focus:ring-accent-glow/50 disabled:opacity-50" />
                     </div>
                     <div>
                         <label className="text-sm font-bold text-text-secondary block mb-2">Account Display Name</label>
-                        <input type="text" value={accountName} onChange={(e) => setAccountName(e.target.value)} required placeholder="e.g., John Doe" disabled={!available} className="w-full p-3 bg-background rounded-md border border-[var(--border)] focus:border-[var(--accent-glow)] focus:ring-2 focus:ring-[var(--accent-glow)]/50 transition disabled:opacity-50" />
+                        <input type="text" value={accountName} onChange={(e) => setAccountName(e.target.value)} required placeholder="e.g., John Doe" disabled={!available} className="w-full p-3 bg-background rounded-md border border-border focus:border-accent-glow focus:ring-2 focus:ring-accent-glow/50 disabled:opacity-50" />
                     </div>
-                    <button type="submit" disabled={loading || !available} className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 text-white font-bold py-3 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                    <button type="submit" disabled={loading || !available} className="w-full bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600 text-white font-bold py-3 rounded-lg shadow-lg shadow-sky-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                         <Banknote size={16} /> {loading ? 'Submitting...' : 'Submit Request'}
                     </button>
                 </form>
@@ -644,9 +647,9 @@ const HistoryTab: React.FC = () => {
     }
 
     return (
-        <div className="animate-fadeInUp">
+        <div>
             <h2 className="text-3xl font-bold mb-6">History</h2>
-            <div className="bg-surface rounded-xl border border-[var(--border)] overflow-hidden">
+            <div className="bg-surface rounded-xl border border-border overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="min-w-full text-sm">
                         <thead className="bg-background/50">
@@ -658,11 +661,11 @@ const HistoryTab: React.FC = () => {
                                 <th className="p-4 text-left font-semibold text-text-secondary">Status</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-[var(--border)]">
+                        <tbody className="divide-y divide-border">
                             {loading ? (
                                 <tr><td colSpan={5} className="text-center p-12"><div className="w-8 h-8 border-2 border-t-transparent mx-auto rounded-full animate-spin"></div></td></tr>
-                            ) : history.length > 0 ? history.map(item => (
-                                <tr key={`${isTransaction(item) ? 'tx' : 'wd'}-${item.id}`} className="hover:bg-background/30 transition-colors">
+                            ) : history.length > 0 ? history.map((item, index) => (
+                                <tr key={`${isTransaction(item) ? 'tx' : 'wd'}-${item.id}`} className="hover:bg-background/30 animate-slideInUp" style={{ animationDelay: `${index * 30}ms` }}>
                                     <td className="p-4 whitespace-nowrap text-text-secondary">{new Date(item.created_at).toLocaleString()}</td>
                                     <td className="p-4 whitespace-nowrap">
                                         {isTransaction(item) ? (
@@ -731,26 +734,26 @@ const ReferralsTab: React.FC = () => {
     if (!profile) return null;
 
     return (
-        <div className="animate-fadeInUp">
+        <div>
             <h2 className="text-3xl font-bold mb-6">Referral Program</h2>
             <div className="grid md:grid-cols-2 gap-8 mb-8">
-                <div className="bg-surface p-6 rounded-xl border border-[var(--border)]">
+                <div className="bg-surface p-6 rounded-xl border border-border">
                     <h3 className="text-xl font-semibold text-white mb-3">Your Referral Code</h3>
                     <p className="text-text-secondary mb-4">Share this code with your friends. When they sign up and purchase their first plan, you'll receive a bonus of 400 PKR!</p>
-                    <div className="flex items-center gap-2 bg-background p-3 rounded-lg border border-[var(--border)]">
+                    <div className="flex items-center gap-2 bg-background p-3 rounded-lg border border-border">
                         <input
                             type="text"
                             value={profile.referral_code || 'No code generated yet.'}
                             readOnly
                             className="bg-transparent w-full text-lg font-mono text-text-primary focus:outline-none"
                         />
-                        <button onClick={handleCopy} disabled={!profile.referral_code} className="bg-primary-600 text-white px-3 py-1.5 rounded-md text-sm font-semibold hover:bg-primary-500 transition-colors flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <button onClick={handleCopy} disabled={!profile.referral_code} className="bg-primary-600 text-white px-3 py-1.5 rounded-md text-sm font-semibold hover:bg-primary-500 flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed">
                             {copySuccess ? <CheckCircle size={14} /> : <Copy size={14} />}
                             {copySuccess || 'Copy'}
                         </button>
                     </div>
                 </div>
-                <div className="bg-surface p-6 rounded-xl border border-[var(--border)] grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+                <div className="bg-surface p-6 rounded-xl border border-border grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
                     <div>
                         <h3 className="text-lg font-semibold text-text-secondary mb-2">Total Referral Earnings</h3>
                         <p className="text-4xl font-extrabold text-green-400">PKR {profile.referral_earnings?.toFixed(2) || '0.00'}</p>
@@ -763,7 +766,7 @@ const ReferralsTab: React.FC = () => {
             </div>
 
             <h3 className="text-2xl font-bold mb-4">Users You've Referred</h3>
-             <div className="bg-surface rounded-xl border border-[var(--border)] overflow-hidden">
+             <div className="bg-surface rounded-xl border border-border overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="min-w-full text-sm">
                         <thead className="bg-background/50">
@@ -773,13 +776,13 @@ const ReferralsTab: React.FC = () => {
                                 <th className="p-4 text-left font-semibold text-text-secondary">Status</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-[var(--border)]">
+                        <tbody className="divide-y divide-border">
                             {loading ? (
                                 <tr><td colSpan={3} className="text-center p-12"><div className="w-8 h-8 border-2 border-t-transparent mx-auto rounded-full animate-spin"></div></td></tr>
                             ) : error ? (
                                 <tr><td colSpan={3} className="text-center p-12 text-danger">{error}</td></tr>
                             ) : referredUsers.length > 0 ? referredUsers.map(user => (
-                                <tr key={user.id} className="hover:bg-background/30 transition-colors">
+                                <tr key={user.id} className="hover:bg-background/30">
                                     <td className="p-4 font-medium text-text-primary">{user.username}</td>
                                     <td className="p-4 text-text-secondary">{new Date(user.created_at).toLocaleDateString()}</td>
                                     <td className="p-4">
@@ -809,6 +812,14 @@ const DashboardPage: React.FC = () => {
     const [activeTab, setActiveTab] = useState('watch');
     const { profile } = useAuth();
 
+    const navItems = [
+        { id: 'watch', label: 'Watch', icon: Film },
+        { id: 'history', label: 'History', icon: History },
+        { id: 'plans', label: 'Plans', icon: Shield },
+        { id: 'referrals', label: 'Referrals', icon: Users },
+        { id: 'withdraw', label: 'Withdraw', icon: Banknote }
+    ];
+
     const renderTabContent = () => {
         switch (activeTab) {
             case 'watch': return <WatchVideos />;
@@ -830,43 +841,47 @@ const DashboardPage: React.FC = () => {
     };
     const greeting = getGreeting();
 
-    const getPlanExpiryDate = () => {
-        if (!profile.plan_activated_at || !profile.plans) return null;
-        const activationDate = new Date(profile.plan_activated_at);
-        activationDate.setDate(activationDate.getDate() + profile.plans.validity_days);
-        return activationDate.toLocaleDateString();
-    }
-    const expiryDate = getPlanExpiryDate();
-
     return (
-        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 pb-28">
             <header className="mb-10 animate-fadeInUp">
-                <h1 className="text-4xl md:text-5xl font-extrabold text-white">{greeting}, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">{profile.username}</span>!</h1>
-                <div className="mt-6 flex flex-wrap gap-x-8 gap-y-4 items-center bg-surface/50 backdrop-blur-sm border border-[var(--border)] p-6 rounded-xl">
+                <h1 className="text-4xl md:text-5xl font-extrabold text-white">{greeting}, <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-indigo-400">{profile.username}</span>!</h1>
+                <div className="mt-6 flex flex-wrap gap-x-8 gap-y-4 items-center bg-surface/50 backdrop-blur-sm border border-border p-6 rounded-xl shadow-lg">
                     <div className="text-lg">Balance: <span className="font-bold text-green-400 text-2xl">PKR {profile.balance.toFixed(2)}</span></div>
                     {profile.isPlanCurrentlyActive && profile.plans ? (
                         <>
                         <div className="text-lg">Current Plan: <span className="font-bold text-yellow-400 text-2xl">{profile.plans.name}</span></div>
-                        {expiryDate && <div className="text-lg">Expires on: <span className="font-bold text-text-primary text-2xl">{expiryDate}</span></div>}
                         </>
                     ) : (
                          <div className="text-lg">Current Plan: <span className="font-bold text-text-secondary text-2xl">None</span></div>
                     )}
                 </div>
             </header>
-
-            <div className="relative border-b border-[var(--border)] mb-8">
-                 <div className="flex overflow-x-auto -mb-px">
-                    <button onClick={() => setActiveTab('watch')} className={`flex items-center gap-2 px-6 py-4 font-semibold transition-colors flex-shrink-0 ${activeTab === 'watch' ? 'text-white border-b-2 border-[var(--accent-glow)]' : 'text-text-secondary hover:text-white'}`}><PlayCircle size={18}/> Watch Videos</button>
-                    <button onClick={() => setActiveTab('plans')} className={`flex items-center gap-2 px-6 py-4 font-semibold transition-colors flex-shrink-0 ${activeTab === 'plans' ? 'text-white border-b-2 border-[var(--accent-glow)]' : 'text-text-secondary hover:text-white'}`}><Shield size={18}/> Plans</button>
-                    <button onClick={() => setActiveTab('withdraw')} className={`flex items-center gap-2 px-6 py-4 font-semibold transition-colors flex-shrink-0 ${activeTab === 'withdraw' ? 'text-white border-b-2 border-[var(--accent-glow)]' : 'text-text-secondary hover:text-white'}`}><Banknote size={18}/> Withdraw</button>
-                    <button onClick={() => setActiveTab('history')} className={`flex items-center gap-2 px-6 py-4 font-semibold transition-colors flex-shrink-0 ${activeTab === 'history' ? 'text-white border-b-2 border-[var(--accent-glow)]' : 'text-text-secondary hover:text-white'}`}><History size={18}/> History</button>
-                    <button onClick={() => setActiveTab('referrals')} className={`flex items-center gap-2 px-6 py-4 font-semibold transition-colors flex-shrink-0 ${activeTab === 'referrals' ? 'text-white border-b-2 border-[var(--accent-glow)]' : 'text-text-secondary hover:text-white'}`}><Users size={18}/> Referrals</button>
-                </div>
-            </div>
             
-            <div>{renderTabContent()}</div>
+            <div className="animate-slideInUp" key={activeTab}>{renderTabContent()}</div>
 
+            {/* Bottom Navigation */}
+            <nav className="fixed bottom-0 left-0 right-0 bg-surface/90 backdrop-blur-lg border-t border-border z-40">
+                <div className="max-w-md mx-auto flex justify-around items-stretch h-20 px-2">
+                    {navItems.map((item) => {
+                        const Icon = item.icon;
+                        const isActive = activeTab === item.id;
+                        return (
+                            <button 
+                                key={item.id} 
+                                onClick={() => setActiveTab(item.id)}
+                                className={`flex flex-col items-center justify-center gap-1 w-full text-xs font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus-visible:ring-accent-glow rounded-lg`}
+                                aria-label={item.label}
+                                aria-current={isActive ? 'page' : undefined}
+                            >
+                                <div className={`relative flex items-center justify-center w-16 h-8 rounded-full ${isActive ? 'bg-accent-glow/20' : ''}`}>
+                                  <Icon size={22} className={isActive ? 'text-accent-glow' : 'text-text-secondary'} />
+                                </div>
+                                <span className={`${isActive ? 'text-text-primary' : 'text-text-secondary'}`}>{item.label}</span>
+                            </button>
+                        );
+                    })}
+                </div>
+            </nav>
         </div>
     );
 };
