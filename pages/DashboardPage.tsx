@@ -4,6 +4,7 @@
 
 
 
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../services/supabase';
@@ -404,9 +405,8 @@ const BuyPlan: React.FC = () => {
                         <h3 className="text-lg font-semibold text-accent-glow mb-2">Payment Instructions</h3>
                         <p className="text-text-secondary">Please send <strong className="text-white">PKR {selectedPlan.price}</strong> to the following account:</p>
                         <ul className="list-none mt-2 space-y-1 text-text-primary">
-                            <li><strong>Name:</strong> Maria</li>
-                            <li><strong>Account Number:</strong> 03296779224</li>
-                            <li><strong>Services:</strong> Jazzcash / EasyPaisa</li>
+                            <li><strong>RAST ID:</strong> PK03SADA0000003296779224</li>
+                            <li><strong>OR Name:</strong> MARIA</li>
                         </ul>
                     </div>
                     <form onSubmit={handleSubmit} className="space-y-6">
